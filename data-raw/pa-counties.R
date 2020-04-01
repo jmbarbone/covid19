@@ -850,17 +850,6 @@ ggplot(pa_counties,
   geom_smooth(method = "loess",
               aes(group = "model"))
 
-
-# x <- double(10)
-# x[1] <- 20
-# 
-# for(i in seq_along(x)[-1]) {
-#   # x[i] <- x[i-1] * sqrt(2)
-#   x[i] <- x[i-1] * 1.33
-# }
-# 
-# plot(x)
-
 pa_counties %>% 
   filter(cs_cases >= 100) %>% 
   group_by(county) %>% 
@@ -871,11 +860,6 @@ pa_counties %>%
               se = FALSE,
               formula = "y ~ x",
               aes(group = "fit")) +
-  # geom_smooth(method = "lm",
-  #             se = FALSE,
-  #             linetype = 2,
-  #             formula = "y ~ log10(x)",
-  #             aes(group = "estimate")) +
   geom_line() +
   labs(x = "Number of days since 100th case",
        y = "Cumulative cases")
@@ -897,9 +881,6 @@ mod2 <- ets(log10(penn_ts[seq(1, n)]), model = "AAN", damped = TRUE, additive.on
 forecast_h <- 30
 res1 <- forecast(mod1, h = forecast_h)
 res2 <- forecast(mod2, h = forecast_h)
-# res$series
-# max(penn$date)
-# plot(res)
 res_data1 <- cbind(date = c(max(penn$date) + seq(forecast_h)),
       res1$lower %>% sapply(function(x) 10^x) %>% as_tibble %>% set_names(c("lower_80", "lower_90")),
       mean = sapply(res1$mean, function(x) 10^x, simplify = FALSE) %>% unlist(),
