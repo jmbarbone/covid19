@@ -625,65 +625,65 @@ pa_county_confirmed <- list(
     York	43', sep = "\t"
   ),
   "2020-03-30" = read_text_table(
-    'Adams	8	
-    Allegheny	290	2
-    Armstrong	3	
-    Beaver	44	
-    Berks	82	
-    Blair	6	
-    Bradford	3	
-    Bucks	246	4
-    Butler	49	2
-    Cambria	2	
-    Cameron	1	
-    Carbon	13	
-    Centre	24	
-    Chester	146	
-    Clarion	1	
-    Clearfield	4	
-    Columbia	6	
-    Crawford	4	
-    Cumberland	24	1
-    Dauphin	36	
-    Delaware	303	4
-    Erie	13	
-    Fayette	11	
-    Franklin	12	
-    Greene	7	
-    Huntingdon	1	
-    Indiana	2	
-    Juniata	3	
-    Lackawanna	62	2
-    Lancaster	97	2
-    Lawrence	10	1
-    Lebanon	27	
-    Lehigh	231	3
-    Luzerne	150	3
-    Lycoming	4	
-    Mckean	1	
-    Mercer	7	
-    Mifflin	1	
-    Monroe	182	7
-    Montgomery	540	5
-    Montour	10	
-    Northampton	184	5
-    Northumberland	1	
-    Perry	1	
-    Philadelphia	1007	7
-    Pike	39	1
-    Potter	2	
-    Schuylkill	30	
-    Snyder	2	
-    Somerset	2	
-    Susquehanna	1	
-    Tioga	1	
-    Union	4	
-    Venango	1	
-    Warren	1	
-    Washington	26	
-    Wayne	10	
-    Westmoreland	55	
-    York	54	', sep = "\t"
+    'Adams	8
+    Allegheny	290
+    Armstrong	3
+    Beaver	44
+    Berks	82
+    Blair	6
+    Bradford	3
+    Bucks	246
+    Butler	49
+    Cambria	2
+    Cameron	1
+    Carbon	13
+    Centre	24
+    Chester	146
+    Clarion	1
+    Clearfield	4
+    Columbia	6
+    Crawford	4
+    Cumberland	24
+    Dauphin	36
+    Delaware	303
+    Erie	13
+    Fayette	11
+    Franklin	12
+    Greene	7
+    Huntingdon	1
+    Indiana	2
+    Juniata	3
+    Lackawanna	62
+    Lancaster	97
+    Lawrence	10
+    Lebanon	27
+    Lehigh	231
+    Luzerne	150
+    Lycoming	4
+    Mckean	1
+    Mercer	7
+    Mifflin	1
+    Monroe	182
+    Montgomery	540
+    Montour	10
+    Northampton	184
+    Northumberland	1
+    Perry	1
+    Philadelphia	1007
+    Pike	39
+    Potter	2
+    Schuylkill	30
+    Snyder	2
+    Somerset	2
+    Susquehanna	1
+    Tioga	1
+    Union	4
+    Venango	1
+    Warren	1
+    Washington	26
+    Wayne	10
+    Westmoreland	55
+    York	54', sep = "\t"
   ),
   "2020-03-31" = read_text_table(
     'Adams	9
@@ -746,6 +746,68 @@ pa_county_confirmed <- list(
     Wayne	10
     Westmoreland	61
     York	66', sep = "\t"
+  ),
+  "2020-04-01" = read_text_table(
+    'Adams	12
+    Allegheny	356
+    Armstrong	5
+    Beaver	54
+    Bedford	3
+    Berks	151
+    Blair	4
+    Bradford	8
+    Bucks	312
+    Butler	64
+    Cambria	3
+    Cameron	1
+    Carbon	23
+    Centre	27
+    Chester	183
+    Clarion	4
+    Clearfield	4
+    Columbia	8
+    Crawford	5
+    Cumberland	38
+    Dauphin	59
+    Delaware	390
+    Erie	15
+    Fayette	14
+    Franklin	21
+    Greene	9
+    Huntingdon	1
+    Indiana	6
+    Juniata	2
+    Lackawanna	85
+    Lancaster	157
+    Lawrence	13
+    Lebanon	36
+    Lehigh	374
+    Luzerne	282
+    Lycoming	7
+    Mckean	1
+    Mercer	8
+    Mifflin	1
+    Monroe	278
+    Montgomery	649
+    Montour	13
+    Northampton	312
+    Northumberland	6
+    Perry	1
+    Philadelphia	1478
+    Pike	57
+    Potter	2
+    Schuylkill	47
+    Snyder	3
+    Somerset	3
+    Susquehanna	2
+    Tioga	2
+    Union	2
+    Venango	3
+    Warren	1
+    Washington	35
+    Wayne	14
+    Westmoreland	72
+    York	79', sep = "\t"
   )
 ) %>% 
   map(mutate_all, as.integer) %>% 
