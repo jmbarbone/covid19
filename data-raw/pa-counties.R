@@ -808,6 +808,70 @@ pa_county_confirmed <- list(
     Wayne	14
     Westmoreland	72
     York	79', sep = "\t"
+  ),
+  "2020-04-02" = read_text_table(
+    'Adams	18
+    Allegheny	419
+    Armstrong	7
+    Beaver	55
+    Bedford	3
+    Berks	168
+    Blair	4
+    Bradford	8
+    Bucks	370
+    Butler	69
+    Cambria	4
+    Cameron	1
+    Carbon	26
+    Centre	28
+    Chester	210
+    Clarion	4
+    Clearfield	4
+    Columbia	11
+    Crawford	5
+    Cumberland	41
+    Dauphin	67
+    Delaware	470
+    Erie	16
+    Fayette	15
+    Forest	1
+    Franklin	23
+    Greene	11
+    Huntingdon	2
+    Indiana	6
+    Juniata	2
+    Lackawanna	108
+    Lancaster	203
+    Lawrence	16
+    Lebanon	45
+    Lehigh	479
+    Luzerne	384
+    Lycoming	7
+    Mckean	1
+    Mercer	9
+    Mifflin	1
+    Monroe	321
+    Montgomery	735
+    Montour	15
+    Northampton	378
+    Northumberland	8
+    Perry	3
+    Philadelphia	1852
+    Pike	68
+    Potter	2
+    Schuylkill	54
+    Snyder	3
+    Somerset	3
+    Susquehanna	3
+    Tioga	2
+    Union	2
+    Venango	3
+    Warren	1
+    Washington	38
+    Wayne	17
+    Westmoreland	84
+    Wyoming	1
+    York	102', sep = "\t"
   )
 ) %>% 
   map(mutate_all, as.integer) %>% 
@@ -892,8 +956,8 @@ res_data2 <- cbind(date = c(max(penn$date) + seq(forecast_h)),
                   mean = sapply(res2$mean, function(x) 10^x, simplify = FALSE) %>% unlist(),
                   res2$upper %>% sapply(function(x) 10^x) %>% as_tibble %>% set_names(c("upper_80", "upper_90"))) %>% 
   mutate_if(is.double, round)
-res_data1 <- res_data1[seq(14), ]
-res_data2 <- res_data2[seq(14), ]
+# res_data1 <- res_data1[seq(14), ]
+# res_data2 <- res_data2[seq(14), ]
 
 ggplot(penn, aes(x = date, y = cases)) +
   geom_line(size = 1.5) +
