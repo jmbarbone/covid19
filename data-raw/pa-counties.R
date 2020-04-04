@@ -11,7 +11,8 @@ read_text_table <- function(text, sep = "") {
   text %>% 
     textConnection() %>% 
     read.table(sep = sep) %>% 
-    mutate(V1 = str_trim(V1)) %>% 
+    mutate(V1 = str_trim(V1),
+           V1 = recode(V1, "Mckean" = "McKean")) %>% 
     pivot_wider(names_from = V1,
                 values_from = V2) %>% 
     mutate_all(as.double) ## will convert everything back to integers
@@ -937,6 +938,72 @@ pa_county_confirmed <- list(
     Westmoreland	110
     Wyoming	2
     York	121', sep = "\t"
+  ),
+  "2020-04-04" = read_text_table(
+    'Adams	21
+    Allegheny	552
+    Armstrong	12
+    Beaver	69
+    Bedford	4
+    Berks	235
+    Blair	5
+    Bradford	10
+    Bucks	488
+    Butler	84
+    Cambria	6
+    Cameron	1
+    Carbon	46
+    Centre	39
+    Chester	250
+    Clarion	4
+    Clearfield	7
+    Clinton	1
+    Columbia	20
+    Crawford	5
+    Cumberland	54
+    Dauphin	99
+    Delaware	616
+    Erie	19
+    Fayette	23
+    Forest	2
+    Franklin	27
+    Greene	12
+    Huntingdon	4
+    Indiana	9
+    Juniata	7
+    Lackawanna	146
+    Lancaster	291
+    Lawrence	22
+    Lebanon	87
+    Lehigh	804
+    Luzerne	648
+    Lycoming	10
+    McKean	1
+    Mercer	14
+    Mifflin	4
+    Monroe	484
+    Montgomery	982
+    Montour	19
+    Northampton	588
+    Northumberland	9
+    Perry	5
+    Philadelphia	2610
+    Pike	97
+    Potter	3
+    Schuylkill	77
+    Snyder	6
+    Somerset	3
+    Sullivan	1
+    Susquehanna	5
+    Tioga	3
+    Union	5
+    Venango	3
+    Warren	1
+    Washington	46
+    Wayne	28
+    Westmoreland	135
+    Wyoming	5
+    York	144', sep = "\t"
   )
 ) %>% 
   map(mutate_all, as.integer) %>% 
@@ -965,6 +1032,13 @@ library(usethis)
 use_data(pa_county_confirmed, overwrite = TRUE)
 use_data(pa_county_population, overwrite = TRUE)
 
+
+# By country pop ----------------------------------------------------------
+
+pa_county_confirmed %>% 
+  filter(date == max(date)) %>% 
+  pivot_longer(-date, names_to = "county", values_to = "cases") %>% 
+  anti_join(pa_county_population)
 
 # Some graphs ---------------------------------------------------------------------------------
 
