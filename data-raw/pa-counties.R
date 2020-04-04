@@ -1038,7 +1038,12 @@ use_data(pa_county_population, overwrite = TRUE)
 pa_county_confirmed %>% 
   filter(date == max(date)) %>% 
   pivot_longer(-date, names_to = "county", values_to = "cases") %>% 
-  anti_join(pa_county_population)
+  inner_join(pa_county_population, by = "county") %>% 
+  mutate(cases_prop = cases / estimate_population) %>% 
+  ggplot(aes(x = cases_prop, y = reorder(county, cases_prop))) +
+  geom_col() +
+  scale_x_continuous(label = scales::label_percent())
+plotly::ggplotly()
 
 # Some graphs ---------------------------------------------------------------------------------
 
