@@ -3,9 +3,11 @@
 # County level data for Pennsylvania
 # ---------------------------------------------------------------------------------------------
 
-
+options(tidyverse.quiet = TRUE)
 library(tidyverse)
 library(janitor)
+
+theme_set(theme_bw())
 
 read_text_table <- function(text, sep = "") {
   text %>% 
@@ -1004,6 +1006,73 @@ pa_county_confirmed <- list(
     Westmoreland	135
     Wyoming	5
     York	144', sep = "\t"
+  ),
+  "2020-04-05" = read_text_table(
+    'Adams	22
+    Allegheny	605
+    Armstrong	12
+    Beaver	84
+    Bedford	4
+    Berks	276
+    Blair	5
+    Bradford	10
+    Bucks	555
+    Butler	87
+    Cambria	7
+    Cameron	1
+    Carbon	50
+    Centre	43
+    Chester	269
+    Clarion	5
+    Clearfield	7
+    Clinton	1
+    Columbia	22
+    Crawford	7
+    Cumberland	58
+    Dauphin	118
+    Delaware	708
+    Erie	19
+    Fayette	27
+    Forest	3
+    Franklin	30
+    Fulton	1
+    Greene	12
+    Huntingdon	4
+    Indiana	13
+    Juniata	7
+    Lackawanna	172
+    Lancaster	371
+    Lawrence	23
+    Lebanon	106
+    Lehigh	877
+    Luzerne	741
+    Lycoming	9
+    McKean	1
+    Mercer	18
+    Mifflin	9
+    Monroe	528
+    Montgomery	1111
+    Montour	37
+    Northampton	636
+    Northumberland	14
+    Perry	5
+    Philadelphia	3135
+    Pike	114
+    Potter	3
+    Schuylkill	90
+    Snyder	8
+    Somerset	4
+    Sullivan	1
+    Susquehanna	6
+    Tioga	3
+    Union	6
+    Venango	3
+    Warren	1
+    Washington	50
+    Wayne	33
+    Westmoreland	147
+    Wyoming	5
+    York	171', sep = "\t"
   )
 ) %>% 
   map(mutate_all, as.integer) %>% 
@@ -1039,10 +1108,16 @@ pa_county_confirmed %>%
   filter(date == max(date)) %>% 
   pivot_longer(-date, names_to = "county", values_to = "cases") %>% 
   inner_join(pa_county_population, by = "county") %>% 
-  mutate(cases_prop = cases / estimate_population) %>% 
-  ggplot(aes(x = cases_prop, y = reorder(county, cases_prop))) +
+  mutate(cases_prop = cases / estimate_population,
+         cases_pmil = cases_prop * 1e6,
+         county = fct_reorder(county, cases_prop)) %>% 
+  ggplot(aes(x = cases_pmil, y = county, fill = county)) +
   geom_col() +
-  scale_x_continuous(label = scales::label_percent())
+  theme(legend.position = "none") +
+  # scale_x_continuous(label = scales::label_percent()) +
+  labs(title = "County cases per million residents",
+       x = "Cases per million",
+       y = 'County')
 plotly::ggplotly()
 
 # Some graphs ---------------------------------------------------------------------------------
