@@ -1073,6 +1073,73 @@ pa_county_confirmed <- list(
     Westmoreland	147
     Wyoming	5
     York	171', sep = "\t"
+  ),
+  "2020-04-06" = read_text_table(
+    'Adams	25
+    Allegheny	642
+    Armstrong	13
+    Beaver	96
+    Bedford	4
+    Berks	326
+    Blair	5
+    Bradford	10
+    Bucks	619
+    Butler	91
+    Cambria	7
+    Cameron	1
+    Carbon	59
+    Centre	44
+    Chester	307
+    Clarion	6
+    Clearfield	7
+    Clinton	3
+    Columbia	26
+    Crawford	9
+    Cumberland	68
+    Dauphin	132
+    Delaware	822
+    Erie	20
+    Fayette	29
+    Forest	4
+    Franklin	32
+    Fulton	1
+    Greene	12
+    Huntingdon	4
+    Indiana	17
+    Juniata	11
+    Lackawanna	190
+    Lancaster	408
+    Lawrence	24
+    Lebanon	124
+    Lehigh	1006
+    Luzerne	849
+    Lycoming	10
+    McKean	1
+    Mercer	18
+    Mifflin	5
+    Monroe	572
+    Montgomery	1230
+    Montour	33
+    Northampton	716
+    Northumberland	15
+    Perry	5
+    Philadelphia	3611
+    Pike	125
+    Potter	3
+    Schuylkill	103
+    Snyder	8
+    Somerset	6
+    Sullivan	1
+    Susquehanna	6
+    Tioga	8
+    Union	6
+    Venango	5
+    Warren	1
+    Washington	53
+    Wayne	35
+    Westmoreland	157
+    Wyoming	5
+    York	189', sep = "\t"
   )
 ) %>% 
   map(mutate_all, as.integer) %>% 
@@ -1118,6 +1185,43 @@ pa_county_confirmed %>%
   labs(title = "County cases per million residents",
        x = "Cases per million",
        y = 'County')
+plotly::ggplotly()
+
+
+# Growth and cases --------------------------------------------------------
+
+means <- pa_county_confirmed %>% 
+  mutate_if(is.integer, function(x) (x - lag(x)) / lag(x)) %>% 
+  tail(7) %>% 
+  select(-date) %>% 
+  summarise_all(function(x) 
+    mean(x[abs(x) != Inf], na.rm = TRUE)) %>% 
+  pivot_longer(cols = colnames(.),
+               names_to = "county",
+               values_to = "percentage")
+
+pa_county_confirmed %>% 
+  tail(1) %>% 
+  pivot_longer(-date,
+               names_to = "county",
+               values_to = "total_cases") %>%
+  filter(total_cases >= 10) %>%
+  inner_join(means, by = "county") %>% 
+  ggplot(aes(x = total_cases, y = percentage, labels = county,
+             size = log(total_cases),
+             color = percentage)) +
+  geom_smooth(formula = "y ~ x",
+              method = loess,
+              aes(group = "fit")) +
+  geom_point() +
+  scale_x_log10() +
+  scale_color_gradient2(low = "green", mid = "blue", high = "red") +
+  scale_y_continuous(labels = scales::label_percent(1)) +
+  theme(legend.position = "none") +
+  labs(title = "Pennsylvania county cases growth",
+       subtitle = "Of counties with 10 or more cases",
+       x = "Total Cases",
+       y = "Mean proportion of growth (past 7 days)")
 plotly::ggplotly()
 
 # Some graphs ---------------------------------------------------------------------------------
