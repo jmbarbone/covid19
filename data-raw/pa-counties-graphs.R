@@ -1,5 +1,6 @@
 
 library(tidyverse)
+library(plotly)
 theme_set(theme_bw())
 
 load('data/pa_county_confirmed.rda')
@@ -23,8 +24,9 @@ pa_county_confirmed %>%
   labs(title = "Pennsylvania: New cases by date",
        x = "Date of report",
        y = "New cases (from previous day)")
+ggplotly()
 
-# By country pop ----------------------------------------------------------
+# By county pop -----------------------------------------------------------
 
 pa_county_confirmed %>% 
   filter(date == max(date)) %>% 
@@ -40,7 +42,7 @@ pa_county_confirmed %>%
   labs(title = "County cases per million residents",
        x = "Cases per million",
        y = 'County')
-plotly::ggplotly()
+ggplotly()
 
 
 # Growth and cases --------------------------------------------------------
@@ -60,7 +62,7 @@ pa_county_confirmed %>%
   pivot_longer(-date,
                names_to = "county",
                values_to = "total_cases") %>%
-  # filter(total_cases >= 10) %>%
+  filter(total_cases >= 10) %>%
   inner_join(means, by = "county") %>% 
   ggplot(aes(x = total_cases, y = percentage, labels = county,
              size = log(total_cases),
@@ -68,6 +70,10 @@ pa_county_confirmed %>%
   geom_smooth(formula = "y ~ x",
               method = loess,
               aes(group = "fit")) +
+  # geom_smooth(formula = "y ~ x",
+  #             method = glm,
+  #             method.args = list(family = quasibinomial),
+  #             aes(group = "qbinomfit")) +
   geom_point() +
   scale_x_log10() +
   scale_color_gradient2(low = "green", mid = "blue", high = "red") +
@@ -77,7 +83,7 @@ pa_county_confirmed %>%
        subtitle = "Of counties with 10 or more cases",
        x = "Total Cases",
        y = "Mean proportion of growth (past 7 days)")
-plotly::ggplotly()
+ggplotly()
 
 # Some graphs ---------------------------------------------------------------------------------
 
@@ -86,11 +92,11 @@ pa_counties <- pa_county_confirmed %>%
                names_to = "county",
                values_to = "cs_cases")
 
-ggplot(pa_counties,
-       aes(x = date, y = cs_cases, col = county)) +
-  geom_line() +
-  geom_smooth(method = "loess",
-              aes(group = "model"))
+# ggplot(pa_counties,
+#        aes(x = date, y = cs_cases, col = county)) +
+#   geom_line() +
+#   geom_smooth(method = "loess",
+#               aes(group = "model"))
 
 pa_counties %>% 
   filter(cs_cases >= 100) %>% 
@@ -105,7 +111,7 @@ pa_counties %>%
   geom_line() +
   labs(x = "Number of days since 100th case",
        y = "Cumulative cases")
-plotly::ggplotly()
+ggplotly()
 
 penn <- pa_counties %>% 
   group_by(date) %>% 
@@ -113,12 +119,13 @@ penn <- pa_counties %>%
 
 penn_ts <- ts(penn$cases, start = penn$date[1])
 n <- length(penn_ts)
+n_start <- n - 14
 
 library(forecast)
 
 ## prediction based on last two weeks
-mod1 <- ets(log10(penn_ts[seq(1, n)]), model = "AAN", damped = FALSE, additive.only = FALSE)
-mod2 <- ets(log10(penn_ts[seq(1, n)]), model = "AAN", damped = TRUE, additive.only = FALSE)
+mod1 <- ets(log10(penn_ts[seq(n_start, n)]), model = "AAN", damped = FALSE, additive.only = FALSE)
+mod2 <- ets(log10(penn_ts[seq(n_start, n)]), model = "AAN", damped = TRUE, additive.only = FALSE)
 
 forecast_h <- 30
 res1 <- forecast(mod1, h = forecast_h)
@@ -139,24 +146,24 @@ res_data2 <- cbind(date = c(max(penn$date) + seq(forecast_h)),
 
 ggplot(penn, aes(x = date, y = cases)) +
   geom_line(size = 1.5) +
-  geom_ribbon(data = res_data1,
-              fill = "red",
-              alpha = .15,
-              aes(x = date,
-                  y = NULL,
-                  ymin = lower_90,
-                  ymax = upper_90)) +
-  geom_ribbon(data = res_data1,
-              fill = "red",
-              alpha = .3,
-              aes(x = date,
-                  y = NULL,
-                  ymin = lower_80,
-                  ymax = upper_80)) +
-  geom_point(data = res_data1,
-             size = 2,
-             color = "darkred",
-             aes(x = date, y = mean)) +
+  # geom_ribbon(data = res_data1,
+  #             fill = "red",
+  #             alpha = .15,
+  #             aes(x = date,
+  #                 y = NULL,
+  #                 ymin = lower_90,
+  #                 ymax = upper_90)) +
+  # geom_ribbon(data = res_data1,
+  #             fill = "red",
+  #             alpha = .3,
+  #             aes(x = date,
+  #                 y = NULL,
+  #                 ymin = lower_80,
+  #                 ymax = upper_80)) +
+  # geom_point(data = res_data1,
+  #            size = 2,
+  #            color = "darkred",
+  #            aes(x = date, y = mean)) +
   geom_ribbon(data = res_data2,
               fill = "blue",
               alpha = .15,
@@ -176,14 +183,15 @@ ggplot(penn, aes(x = date, y = cases)) +
              color = "darkblue",
              aes(x = date, y = mean)) +
   scale_x_date(date_breaks = "14 days") +
-  scale_y_log10() +
+  # scale_y_log10() +
   geom_hline(yintercept = 34000, linetype = 2) +
   theme_bw() +
   labs(title = "Forecast for confirmed COVID-19 cases on Pennsylvania",
        subtitle = paste0("Estimates with 90% and 80% confidence intervals\n",
                          "At 34k cases, assuming 10% cases need ICU,",
                          " all estimate 3400 ICU beds will be filled"),
-       caption = "Data are first transformed to log10 values for forecast",
+       caption = paste0("Data are first transformed to log10 values for forecast\n",
+                        "Only last 2 weeks of data are used"),
        x = "Date",
        y = "Number of confirmed cases")
-plotly::ggplotly(dynamicTicks = FALSE, originalData = TRUE)
+ggplotly(dynamicTicks = FALSE, originalData = TRUE)
