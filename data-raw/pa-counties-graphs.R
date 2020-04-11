@@ -127,22 +127,22 @@ library(forecast)
 mod1 <- ets(log10(penn_ts[seq(n_start, n)]), model = "AAN", damped = FALSE, additive.only = FALSE)
 mod2 <- ets(log10(penn_ts[seq(n_start, n)]), model = "AAN", damped = TRUE, additive.only = FALSE)
 
-forecast_h <- 30
+forecast_h <- 120
 res1 <- forecast(mod1, h = forecast_h)
 res2 <- forecast(mod2, h = forecast_h)
 res_data1 <- cbind(date = c(max(penn$date) + seq(forecast_h)),
                    res1$lower %>% sapply(function(x) 10^x) %>% as_tibble %>% set_names(c("lower_80", "lower_90")),
                    mean = sapply(res1$mean, function(x) 10^x, simplify = FALSE) %>% unlist(),
                    res1$upper %>% sapply(function(x) 10^x) %>% as_tibble %>% set_names(c("upper_80", "upper_90"))) %>% 
-  mutate_if(is.double, round)
+  mutate_if(is.double, round) %>% as_tibble()
 
 res_data2 <- cbind(date = c(max(penn$date) + seq(forecast_h)),
                    res2$lower %>% sapply(function(x) 10^x) %>% as_tibble %>% set_names(c("lower_80", "lower_90")),
                    mean = sapply(res2$mean, function(x) 10^x, simplify = FALSE) %>% unlist(),
                    res2$upper %>% sapply(function(x) 10^x) %>% as_tibble %>% set_names(c("upper_80", "upper_90"))) %>% 
-  mutate_if(is.double, round)
-# res_data1 <- res_data1[seq(14), ]
-# res_data2 <- res_data2[seq(14), ]
+  mutate_if(is.double, round) %>% as_tibble()
+res_data1 <- res_data1[seq(14), ]
+res_data2 <- res_data2[seq(14), ]
 
 ggplot(penn, aes(x = date, y = cases)) +
   geom_line(size = 1.5) +
@@ -183,7 +183,7 @@ ggplot(penn, aes(x = date, y = cases)) +
              color = "darkblue",
              aes(x = date, y = mean)) +
   scale_x_date(date_breaks = "14 days") +
-  # scale_y_log10() +
+  scale_y_log10() +
   geom_hline(yintercept = 34000, linetype = 2) +
   theme_bw() +
   labs(title = "Forecast for confirmed COVID-19 cases on Pennsylvania",
