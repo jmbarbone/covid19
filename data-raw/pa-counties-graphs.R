@@ -107,8 +107,9 @@ pa_counties %>%
   geom_smooth(method = "lm",
               se = FALSE,
               formula = "y ~ x",
+              linetype = 2,
               aes(group = "fit")) +
-  geom_line() +
+  geom_line(size = 1) +
   labs(x = "Number of days since 100th case",
        y = "Cumulative cases")
 ggplotly()

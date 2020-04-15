@@ -1621,8 +1621,79 @@ pa_county_confirmed <- list(
     Westmoreland	228
     Wyoming	12
     York	331', sep = "\t"
+  ),
+  "2020-04-14" = read_text_table(
+    'Adams	63
+    Allegheny	893
+    Armstrong	28
+    Beaver	156
+    Bedford	5
+    Berks	1247
+    Blair	11
+    Bradford	19
+    Bucks	1222
+    Butler	143
+    Cambria	14
+    Cameron	1
+    Carbon	103
+    Centre	70
+    Chester	621
+    Clarion	16
+    Clearfield	9
+    Clinton	8
+    Columbia	125
+    Crawford	16
+    Cumberland	124
+    Dauphin	249
+    Delaware	1806
+    Elk	2
+    Erie	41
+    Fayette	58
+    Forest	5
+    Franklin	69
+    Fulton	2
+    Greene	23
+    Huntingdon	11
+    Indiana	43
+    Jefferson	2
+    Juniata	43
+    Lackawanna	501
+    Lancaster	865
+    Lawrence	51
+    Lebanon	328
+    Lehigh	1803
+    Luzerne	1523
+    Lycoming	29
+    McKean	4
+    Mercer	44
+    Mifflin	16
+    Monroe	847
+    Montgomery	2354
+    Montour	44
+    Northampton	1176
+    Northumberland	48
+    Perry	17
+    Philadelphia	7121
+    Pike	256
+    Potter	4
+    Schuylkill	200
+    Snyder	24
+    Somerset	13
+    Sullivan	1
+    Susquehanna	32
+    Tioga	13
+    Union	23
+    Venango	6
+    Warren	1
+    Washington	70
+    Wayne	70
+    Westmoreland	231
+    Wyoming	11
+    York	371', sep = "\t"
   )
 ) %>% 
+  # I regret this process and hopefully will just put all of
+  ## these into a csv or something easier to read...
   map(mutate_all, as.integer) %>% 
   enframe("date", "confirmed") %>% 
   unnest("confirmed") %>% 
