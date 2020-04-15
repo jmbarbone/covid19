@@ -52,7 +52,9 @@ means <- pa_county_confirmed %>%
   tail(7) %>% 
   select(-date) %>% 
   summarise_all(function(x) 
-    mean(x[abs(x) != Inf], na.rm = TRUE)) %>% 
+    psych::harmonic.mean(x[abs(x) != Inf], na.rm = TRUE, zero = FALSE)
+    # mean(x[abs(x) != Inf], na.rm = TRUE)
+    ) %>% 
   pivot_longer(cols = colnames(.),
                names_to = "county",
                values_to = "percentage")
@@ -184,7 +186,7 @@ ggplot(penn, aes(x = date, y = cases)) +
              color = "darkblue",
              aes(x = date, y = mean)) +
   scale_x_date(date_breaks = "14 days") +
-  scale_y_log10() +
+  # scale_y_log10() +
   geom_hline(yintercept = 34000, linetype = 2) +
   theme_bw() +
   labs(title = "Forecast for confirmed COVID-19 cases on Pennsylvania",
