@@ -2104,6 +2104,75 @@ pa_county_confirmed <- list(
     Westmoreland	286
     Wyoming	17
     York	493', sep = "\t"
+  ),
+  "2020-04-21" = read_text_table(
+    'Adams	91
+    Allegheny	1059
+    Armstrong	38
+    Beaver	303
+    Bedford	16
+    Berks	1988
+    Blair	14
+    Bradford	31
+    Bucks	1917
+    Butler	162
+    Cambria	20
+    Cameron	1
+    Carbon	150
+    Centre	77
+    Chester	919
+    Clarion	18
+    Clearfield	11
+    Clinton	11
+    Columbia	225
+    Crawford	17
+    Cumberland	194
+    Dauphin	400
+    Delaware	2654
+    Elk	2
+    Erie	60
+    Fayette	69
+    Forest	7
+    Franklin	143
+    Fulton	2
+    Greene	25
+    Huntingdon	13
+    Indiana	55
+    Jefferson	3
+    Juniata	72
+    Lackawanna	666
+    Lancaster	1295
+    Lawrence	60
+    Lebanon	525
+    Lehigh	2295
+    Luzerne	1800
+    Lycoming	42
+    McKean	5
+    Mercer	59
+    Mifflin	21
+    Monroe	995
+    Montgomery	3154
+    Montour	47
+    Northampton	1544
+    Northumberland	77
+    Perry	20
+    Philadelphia	9391
+    Pike	314
+    Potter	4
+    Schuylkill	277
+    Snyder	30
+    Somerset	19
+    Sullivan	1
+    Susquehanna	71
+    Tioga	15
+    Union	29
+    Venango	6
+    Warren	2
+    Washington	86
+    Wayne	86
+    Westmoreland	291
+    Wyoming	17
+    York	517', sep = "\t"
   )
 ) %>% 
   # I regret this process and hopefully will just put all of
