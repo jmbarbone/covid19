@@ -64,7 +64,7 @@ pa_county_confirmed %>%
   pivot_longer(-date,
                names_to = "county",
                values_to = "total_cases") %>%
-  filter(total_cases >= 10) %>%
+  filter(total_cases >= 50) %>%
   inner_join(means, by = "county") %>% 
   ggplot(aes(x = total_cases, y = percentage, labels = county,
              size = log(total_cases),
@@ -82,7 +82,7 @@ pa_county_confirmed %>%
   scale_y_continuous(labels = scales::label_percent(1)) +
   theme(legend.position = "none") +
   labs(title = "Pennsylvania county cases growth",
-       subtitle = "Of counties with 10 or more cases",
+       subtitle = "Of counties with 50 or more cases",
        x = "Total Cases",
        y = "Mean proportion of growth (past 7 days)")
 ggplotly()
